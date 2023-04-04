@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\Solidity\\hardhat-tutorial\\contracts\\Token.sol": {
-      "lastModificationDate": 1680610028824,
-      "contentHash": "43cf6b19b37e03821b5b33f886856906",
+      "lastModificationDate": 1680613002846,
+      "contentHash": "4d28b93c77405dc55b46e16bad0cc980",
       "sourceName": "contracts/Token.sol",
       "solcConfig": {
         "version": "0.8.9",

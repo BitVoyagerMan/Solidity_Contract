@@ -52,7 +52,7 @@ contract Token {
                     for(uint j = 0; j < roles[i].length; j ++){
                         variable_score[roles[i][j]] = temp / roles[i].length;
 
-                        usdt.approve(roles[i][j], fixed_score[roles[i][j]] + variable_score[roles[i][j]]);
+                        //usdt.approve(roles[i][j], fixed_score[roles[i][j]] + variable_score[roles[i][j]]);
                     }
                 }
             }
@@ -62,7 +62,7 @@ contract Token {
                     temp /= 2;
                     for(uint j = 0; j < roles[i].length; j ++){
                         variable_score[roles[i][j]] = temp / roles[i].length;
-                        usdt.approve(roles[i][j], fixed_score[roles[i][j]] + variable_score[roles[i][j]]);
+                        //usdt.approve(roles[i][j], fixed_score[roles[i][j]] + variable_score[roles[i][j]]);
                     }
                 }
             }
@@ -86,7 +86,7 @@ contract Token {
         tomonth_fixed_score = fixedScore;
         for(uint i = 0; i < users.length; i ++){
             fixed_score[users[i]] = fixedScore;
-            usdt.approve(users[i], fixed_score[users[i]] + variable_score[users[i]]);
+            //usdt.approve(users[i], fixed_score[users[i]] + variable_score[users[i]]);
         }
         
         emit Fixed_Score_set(fixedScore);
@@ -101,7 +101,8 @@ contract Token {
     function withdraw_fixed_pay() public  {
         uint timestamp = block.timestamp;
         //if(getDay(timestamp) == 1){
-            usdt.transferFrom(owner, msg.sender, fixed_score[msg.sender]);
+            require(fixed_score[msg.sender] > 0 , "You can't get money!!!");
+            usdt.transfer(msg.sender, fixed_score[msg.sender]);
             emit withdraw_fixed_pay_event(owner, msg.sender, fixed_score[msg.sender]);
             fixed_score[msg.sender] = 0;
         //}
@@ -110,7 +111,8 @@ contract Token {
     function withdraw_variable_pay() public {
         uint256 timestamp = block.timestamp;
         //if(getDay(timestamp) == 15){
-            usdt.transferFrom(owner, msg.sender, variable_score[msg.sender]);
+            require(variable_score[msg.sender] > 0 , "You can't get money!!!");
+            usdt.transfer(msg.sender, variable_score[msg.sender]);
             emit  withdraw_variable_pay_event(owner, msg.sender, variable_score[msg.sender]);
             variable_score[msg.sender] = 0;
         //}
