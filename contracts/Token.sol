@@ -12,7 +12,7 @@ contract Token {
     address[] public users; 
     bool isTopToBottom = true;
 
-    
+    uint tomonth_fixed_score;
     uint tomonth_total_variable_score;
     uint max_role = 0;
 
@@ -21,6 +21,7 @@ contract Token {
     mapping(uint => address[]) public roles;
     mapping(address => uint) public fixed_score;
     mapping(address => uint) public variable_score;
+    
 
     event withdraw_fixed_pay_event(address indexed _from, address indexed _to, uint256 _value);
     event withdraw_variable_pay_event(address indexed _from, address indexed _to, uint256 _value);
@@ -72,7 +73,7 @@ contract Token {
         users.push(user);
         roles[role].push(user);
         if(max_role < role) max_role = role;
-        
+        fixed_score[user] = tomonth_fixed_score;
         _calculate_variable_pay_amount();
         emit User_Added(user, role);
     }
@@ -82,10 +83,12 @@ contract Token {
     }
 
     function setFixedMonthlyScore(uint fixedScore) onlyOwner public {
+        tomonth_fixed_score = fixedScore;
         for(uint i = 0; i < users.length; i ++){
             fixed_score[users[i]] = fixedScore;
             usdt.approve(users[i], fixed_score[users[i]] + variable_score[users[i]]);
         }
+        
         emit Fixed_Score_set(fixedScore);
     }
 
@@ -99,7 +102,7 @@ contract Token {
         uint timestamp = block.timestamp;
         //if(getDay(timestamp) == 1){
             usdt.transferFrom(owner, msg.sender, fixed_score[msg.sender]);
-            //emit withdraw_fixed_pay_event(owner, msg.sender, fixed_score[msg.sender]);
+            emit withdraw_fixed_pay_event(owner, msg.sender, fixed_score[msg.sender]);
             fixed_score[msg.sender] = 0;
         //}
     }
@@ -108,7 +111,7 @@ contract Token {
         uint256 timestamp = block.timestamp;
         //if(getDay(timestamp) == 15){
             usdt.transferFrom(owner, msg.sender, variable_score[msg.sender]);
-            //emit  withdraw_variable_pay_event(owner, msg.sender, variable_score[msg.sender]);
+            emit  withdraw_variable_pay_event(owner, msg.sender, variable_score[msg.sender]);
             variable_score[msg.sender] = 0;
         //}
     }
